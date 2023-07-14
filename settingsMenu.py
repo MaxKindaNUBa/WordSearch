@@ -1,6 +1,5 @@
-from tkinter import *
-from tkinter.ttk import *
-from ttkthemes import ThemedStyle
+from wordFinder import * 
+
 
 class wordsearchGen(Tk):
     def __init__(self):
@@ -31,7 +30,6 @@ class wordsearchGen(Tk):
         info["rows"] = int(self.rowE.get())
         info["cols"] = int(self.colE.get())
         info["case"] = self.caseval.get()
-        print(info)
 
 
     def placeWidgets(self):
@@ -39,13 +37,13 @@ class wordsearchGen(Tk):
         self.cas = Label(self,text="Case Options : ",font=("Courier",16),borderwidth=5)
         self.rows = Label(self,text="Number of Rows : ",font=("Courier",16))
         self.cols = Label(self,text="Number of Columns : ",font=("Courier",16))
-        self.words = Button(self,text="Enter your words")
+        self.words = Button(self,text="Enter your words",command=lambda: openWordMaker(self,int(self.rowE.get()),int(self.colE.get())))
         
         self.genButton = Button(self,text="Generate puzzle",command=self.getInfo)
 
-        self.rsize = IntVar()
+        self.rsize = IntVar(self)
         self.rsize.set(10)
-        self.csize= IntVar()
+        self.csize= IntVar(self)
         self.csize.set(10)
 
         self.rowE = Scale(self,variable=self.rsize,orient="horizontal",from_=10,to=100, command=lambda x: self.updateRows(self.rowcount,self.rsize))

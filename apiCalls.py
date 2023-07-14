@@ -2,6 +2,7 @@ import asyncio
 import aiohttp
 from random import randint
 
+
 def get_tasks(session,min,max,num):
     tasks = []
     for i in range(num):

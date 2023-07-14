@@ -5,9 +5,13 @@ from tktooltip import ToolTip
 from ttkthemes import ThemedStyle
 
 
+def openWordMaker(cont,row,col):
+    demoFinder = wordFinder(cont,row,col)
+    demoFinder.mainloop()
+
 class wordFinder(Tk):
-    def __init__(self,row,col):
-        super(wordFinder,self).__init__()
+    def __init__(self,cont,row,col):
+        super().__init__(cont)
         self.title("Word Finder")
         self.geometry("580x560")
         self.row = row
@@ -43,15 +47,15 @@ class wordFinder(Tk):
         self.wcountE = Entry(self,font=("Courier",16),width=3)
 
         self.startr = Label(self,text="Minimum word lenght : ",font=("Courier",16))
-        self.startrsize = IntVar()
+        self.startrsize = IntVar(self)
         self.startrsize.set(4)
-        self.startrcount = Label(width=2,font=("Courier",16,"bold"),text="4")
+        self.startrcount = Label(self,width=2,font=("Courier",16,"bold"),text="4")
         self.startrE = Scale(self,variable=self.startrsize,orient="horizontal",from_=4,to=15, command=lambda x: self.updateRows(self.startrcount,self.startrsize))
         
         self.endr = Label(self,text="Minimum word lenght : ",font=("Courier",16))
-        self.endrsize = IntVar()
+        self.endrsize = IntVar(self)
         self.endrsize.set(4)
-        self.endrcount = Label(width=2,font=("Courier",16,"bold"),text="4")
+        self.endrcount = Label(self,width=2,font=("Courier",16,"bold"),text="4")
         self.endrE = Scale(self,variable=self.endrsize,orient="horizontal",from_=4,to=15, command=lambda x: self.updateRows(self.endrcount,self.endrsize))
 
         self.findButt = Button(self,text="Confirm List",padding=5)
