@@ -37,7 +37,7 @@ class wordsearchGen(Tk):
         self.cas = Label(self,text="Case Options : ",font=("Courier",16),borderwidth=5)
         self.rows = Label(self,text="Number of Rows : ",font=("Courier",16))
         self.cols = Label(self,text="Number of Columns : ",font=("Courier",16))
-        self.words = Button(self,text="Enter your words",command=lambda: openWordMaker(self,int(self.rowE.get()),int(self.colE.get())))
+        self.words = Button(self,text="Enter your words")
         
         self.genButton = Button(self,text="Generate puzzle",command=self.getInfo)
 

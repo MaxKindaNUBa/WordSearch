@@ -5,13 +5,13 @@ from tktooltip import ToolTip
 from ttkthemes import ThemedStyle
 
 
-def openWordMaker(cont,row,col):
-    demoFinder = wordFinder(cont,row,col)
+def openWordMaker(row,col):
+    demoFinder = wordFinder(row,col)
     demoFinder.mainloop()
 
 class wordFinder(Tk):
-    def __init__(self,cont,row,col):
-        super().__init__(cont)
+    def __init__(self,row,col):
+        super().__init__()
         self.title("Word Finder")
         self.geometry("580x560")
         self.row = row
@@ -33,7 +33,7 @@ class wordFinder(Tk):
         self.wordbox = Text(self.wordframe, width=55,height=15,font=("Courier",12,"bold"),borderwidth=2,bg="#5aaef2",wrap="word")
         self.scroll = Scrollbar(self.wordframe,orient="vertical",command=self.wordbox.yview)
         self.wordbox.config(yscrollcommand=self.scroll.set)
-        fillbutton = Button(self.wordframe,text="Auto-Fill words for topic",command=lambda: self.genWords(self.wcountE.get(),self.startrE.get(),self.endrE.get()))
+        fillbutton = Button(self.wordframe,text="Auto-Fill words for topic",command=lambda: self.genWords(int(self.wcountE.get()),int(self.startrE.get()),int(self.endrE.get())))
 
         ToolTip(self.wordbox,msg="Seperate the words by commas.Letters shound be in lowercase. \nFor Example  \n\napple , mango , cherry , pineapple")
         self.wordbox.grid(row=0,column=0,sticky="NSEW")
@@ -94,3 +94,6 @@ class wordFinder(Tk):
         for i in self.listOfWords:
             count+=len(i)
         self.obtAnsPercent.config(text=f"Total given number of letters to be findable: {count}")
+
+
+openWordMaker(15,15)
