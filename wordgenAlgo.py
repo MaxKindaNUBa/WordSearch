@@ -35,19 +35,23 @@ def find_spot(word,nno,wno):
     errors = 0
 
     if orientation == "h" : 
+        print("Making horizontal points")
         wlIndex = random.randint(0,wno-1-lenght)
         nlIndex = random.randint(0,nno-1)
 
     elif orientation == "v" : 
+        print("Making vertical points")
         nlIndex = random.randint(0,nno-1-lenght)
         wlIndex = random.randint(0,wno-1)
         
     elif orientation == "d" : 
+        print("Making diagonal points")
         wlIndex = random.randint(0,wno-1-lenght)
         nlIndex = random.randint(0,nno-1-lenght)
         
     while True:
-        if errors >=0 and errors <5:
+        if errors >0 and errors <5:
+            print(f"Error type 1 : {errors}")
             if orientation == "h" : 
                 wlIndex = random.randint(0,wno-1-lenght)
             if orientation == "v" : 
@@ -55,7 +59,8 @@ def find_spot(word,nno,wno):
             if orientation == "d" : 
                 wlIndex = random.randint(0,wno-1-lenght)
                 nlIndex = random.randint(0,nno-1-lenght)       
-        if errors >=5 and errors < 10 : 
+        if errors >=5 and errors < 10 :
+            print(f"Error type 2 : {errors}") 
             if orientation == "h" : 
                 nlIndex = random.randint(0,nno-1-lenght)
             if orientation == "v" : 
@@ -64,6 +69,7 @@ def find_spot(word,nno,wno):
                 wlIndex = random.randint(0,wno-1-lenght)
                 nlIndex = random.randint(0,nno-1-lenght)
         if errors >= 10:
+            print(f"Error type 3 : {errors}")
             orientation = random.choice(["h","v","d"])
             
         print(f"Checking for : {word}, with {errors} errors, and current pos {nlIndex},{wlIndex} and {orientation} orientation" )
