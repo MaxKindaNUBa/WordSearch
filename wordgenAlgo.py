@@ -1,7 +1,11 @@
 import random
 
-grid = [['.' for i in range(15)] for i in range(15)]
-mistakes=[]
+def sort(lis):
+    for i in range(0,len(lis)):
+        for j in range(0,len(lis)-1-i):
+            if len(lis[j])<len(lis[j+1]):
+                lis[j],lis[j+1]=lis[j+1],lis[j]
+
 def default_gen(orientation,nno,wno,lenght):
     wlIndex,nlIndex = 0,0
     if orientation == "h" : 
@@ -21,12 +25,29 @@ def default_gen(orientation,nno,wno,lenght):
 
     return wlIndex,nlIndex
 
+def place_horizontal(word,nlIndex,wlIndex):
+    lenght = len(word)
+    for i in range(lenght):
+        print(nlIndex,wlIndex+i)
+        grid[nlIndex][wlIndex+i] = word[i]
+def place_vertical(word,nlIndex,wlIndex):
+    lenght = len(word)
+    for i in range(lenght):
+        print(nlIndex+i,wlIndex)
+        grid[nlIndex+i][wlIndex] = word[i]
+def place_diagonal(word,nlIndex,wlIndex):
+    lenght = len(word)
+    for i in range(lenght):
+        print(nlIndex+i,wlIndex+i)
+        grid[nlIndex+i][wlIndex+i] = word[i]
+
 
 def check_empty(orientation,word,nlIndex,wlIndex):
     lenght = len(word)
 
     if orientation=="h":
         for i in range(lenght):
+            print(f"Checking empty in {nlIndex},{wlIndex+i}")
             if grid[nlIndex][wlIndex+i] not in ['.',word[i]] : 
                 return False
         else:
@@ -34,6 +55,7 @@ def check_empty(orientation,word,nlIndex,wlIndex):
         
     elif orientation=="v":
         for i in range(lenght):
+            print(f"Checking empty in {nlIndex+i},{wlIndex}")
             if grid[nlIndex+i][wlIndex] not in ['.',word[i]] : 
                 return False
         else:
@@ -41,12 +63,33 @@ def check_empty(orientation,word,nlIndex,wlIndex):
         
     elif orientation=="d":
             for i in range(lenght):
+                print(f"Checking empty in {nlIndex+i},{wlIndex+i}")
                 if grid[nlIndex+i][wlIndex+i] not in ['.',word[i]] : 
                     return False
             else:
                 return True
 
 
+def second_spot(word,nno,wno):
+    lenght = len(word)
+    if check_empty("h",word,0,0):
+        place_horizontal(word,0,0)
+    elif check_empty("h",word,0,wno-1-lenght):
+        place_horizontal(word,0,wno-1-lenght)
+    elif check_empty("h",word,nno-1,0):
+        place_horizontal(word,nno-1,0)
+    elif check_empty("h",word,nno-1,wno-1-lenght):
+        place_horizontal(word,nno-1,wno-1-lenght)
+    elif check_empty("v",word,0,0):
+        place_vertical(word,0,0)
+    elif check_empty("v",word,wno-1,0):
+        place_vertical(word,wno-1,0)
+    elif check_empty("v",word,nno-1-lenght,0):
+        place_vertical(word,nno-1-lenght,0)
+    elif check_empty("v",word,nno-1-lenght,wno-1):
+        place_vertical(word,nno-1-lenght,wno-1)
+
+ 
 def find_spot(word,nno,wno):
     lenght = len(word)
     orientation = random.choice(["h","v","d"])
@@ -64,7 +107,7 @@ def find_spot(word,nno,wno):
             if orientation == "d" : 
                 wlIndex = random.randint(0,wno-1-lenght)
                 nlIndex = random.randint(0,nno-1-lenght)       
-        if errors >=5 and errors < 10 :
+        elif errors >=5 and errors < 10 :
             print(f"Error type 2 : {errors}") 
             if orientation == "h" : 
                 nlIndex = random.randint(0,nno-1-lenght)
@@ -73,12 +116,15 @@ def find_spot(word,nno,wno):
             if orientation == "d" : 
                 wlIndex = random.randint(0,wno-1-lenght)
                 nlIndex = random.randint(0,nno-1-lenght)
-        if errors >= 10 and errors <=14:
+        elif errors >= 10 and errors <=14:
             print(f"Error type 3 : {errors}")
             orientation = random.choice(["h","v","d"])
-        if errors >=14:
+        elif errors >=14 and errors<25:
             wlIndex,nlIndex = default_gen(orientation,nno,wno,lenght)
-        if errors >=500 :
+        elif errors >=25 and errors<100:
+            orientation = random.choice(["h","v","d"])
+            wlIndex,nlIndex = default_gen(orientation,nno,wno,lenght)
+        elif errors >=100:
             mistakes.append(word)        
             break 
 
@@ -89,28 +135,33 @@ def find_spot(word,nno,wno):
         else:
             errors+=1
 
-
 def word_place(word,nno,wno):
     info = find_spot(word,nno,wno)
-    lenght = len(word)
 
     if info != None :
         wlIndex,nlIndex,orientation = info
         if orientation == "h":
-            for i in range(lenght):
-                print(nlIndex,wlIndex+i)
-                grid[nlIndex][wlIndex+i] = word[i]
+            place_horizontal(word,nlIndex,wlIndex)
         elif orientation == "v" : 
-            for i in range(lenght):
-                print(nlIndex+i,wlIndex)
-                grid[nlIndex+i][wlIndex] = word[i]
+            place_vertical(word,nlIndex,wlIndex)
         elif orientation == "d" : 
-            for i in range(lenght):
-                print(nlIndex+i,wlIndex+i)
-                grid[nlIndex+i][wlIndex+i] = word[i]
+            place_diagonal(word,nlIndex,wlIndex)
+
+    if len(mistakes) != 0 :
+        print("Placing the mistaken words")
+        for word in mistakes:
+            second_spot(word,nno,wno)
 
 
-for word in ["believer","soccer","icecream","beautifull","happy","apple","orange","motorbike","yatch","pineapple","goat","dog"]:
+
+grid = [['.' for i in range(15)] for i in range(15)]
+wordList = ["BELIEVER","SOCCER","ICECREAM","BEAUTY","HAPPY","APPLE","ORANGE","MOTORBIKE","YATCH","PINEAPPLE","GOAT","DOG","PINATA","AVOCADO","GRAPES","DRINKING","WALKING","PIZZA"]
+sort(wordList)
+print(wordList)
+
+mistakes=[]
+
+for word in wordList:
     word_place(word,15,15)
 
 
@@ -122,9 +173,9 @@ for lis in range(len(grid)):
             grid[lis][j] = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         else:
             continue
-
 '''
+
 for i in grid:
     print(i)
 
-print(f"Words that couldnt be added : {mistakes}")
+print(f"Find the words : {wordList}")
