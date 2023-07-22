@@ -166,14 +166,14 @@ for word in wordList:
 
 
 #Will be unquoted when the program is actually deployed
-'''
+
 for lis in range(len(grid)):
     for j in range(len(grid[lis])):
         if grid[lis][j] == '.':
             grid[lis][j] = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         else:
             continue
-'''
+        
 
 for i in grid:
     print(i)
