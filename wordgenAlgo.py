@@ -155,7 +155,7 @@ def word_place(word,nno,wno):
 
 
 grid = [['.' for i in range(15)] for i in range(15)]
-wordList = ["BELIEVER","SOCCER","ICECREAM","BEAUTY","HAPPY","APPLE","ORANGE","MOTORBIKE","YATCH","PINEAPPLE","GOAT","DOG","PINATA","AVOCADO","GRAPES","DRINKING","WALKING","PIZZA"]
+wordList = ["BELIEVER","SOCCER","ICECREAM","BEAUTY","HAPPY","APPLE","ORANGE","MOTORBIKE","YATCH","PINEAPPLE","GOAT","DOG","PINATA","AVOCADO","GRAPES","DRINKING","WALKING","PIZZA","PIZZA","COCONUT","POTATOES"]
 sort(wordList)
 print(wordList)
 
@@ -166,14 +166,14 @@ for word in wordList:
 
 
 #Will be unquoted when the program is actually deployed
-
+'''
 for lis in range(len(grid)):
     for j in range(len(grid[lis])):
         if grid[lis][j] == '.':
             grid[lis][j] = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         else:
             continue
-        
+'''
 
 for i in grid:
     print(i)

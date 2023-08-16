@@ -20,3 +20,5 @@ async def get_words(min,max,num):
             words += await i.json()
 
     return words
+
+print(get_words(5,20,20))
