@@ -48,7 +48,7 @@ def check_empty(orientation,word,nlIndex,wlIndex):
     if orientation=="h":
         for i in range(lenght):
             print(f"Checking empty in {nlIndex},{wlIndex+i}")
-            if grid[nlIndex][wlIndex+i] not in ['.',word[i]] : 
+            if grid[nlIndex][wlIndex+i] not in [' ',word[i]] : 
                 return False
         else:
             return True
@@ -56,7 +56,7 @@ def check_empty(orientation,word,nlIndex,wlIndex):
     elif orientation=="v":
         for i in range(lenght):
             print(f"Checking empty in {nlIndex+i},{wlIndex}")
-            if grid[nlIndex+i][wlIndex] not in ['.',word[i]] : 
+            if grid[nlIndex+i][wlIndex] not in [' ',word[i]] : 
                 return False
         else:
             return True
@@ -64,10 +64,17 @@ def check_empty(orientation,word,nlIndex,wlIndex):
     elif orientation=="d":
             for i in range(lenght):
                 print(f"Checking empty in {nlIndex+i},{wlIndex+i}")
-                if grid[nlIndex+i][wlIndex+i] not in ['.',word[i]] : 
+                if grid[nlIndex+i][wlIndex+i] not in [' ',word[i]] : 
                     return False
             else:
                 return True
+
+def print_puzzle(grid):
+    for line in grid:
+        for i in line:
+            print(i,end=' ')
+        print()
+
 
 
 def second_spot(word,nno,wno):
@@ -148,16 +155,24 @@ def word_place(word,nno,wno):
             place_diagonal(word,nlIndex,wlIndex)
 
     if len(mistakes) != 0 :
-        print("Placing the mistaken words")
+        print("Placing the mistaken words : ")
+        print(mistakes)
         for word in mistakes:
             second_spot(word,nno,wno)
 
 
 
-grid = [['.' for i in range(15)] for i in range(15)]
-wordList = ["BELIEVER","SOCCER","ICECREAM","BEAUTY","HAPPY","APPLE","ORANGE","MOTORBIKE","YATCH","PINEAPPLE","GOAT","DOG","PINATA","AVOCADO","GRAPES","DRINKING","WALKING","PIZZA","PIZZA","COCONUT","POTATOES"]
+grid = [[' ' for i in range(15)] for i in range(15)]
+wordList = ["BELIEVER","SOCCER","ICECREAM","BEAUTY","HAPPY","APPLE","HONDA","ORANGUTTAN","ORANGE","MOTORBIKE","YATCH","PINEAPPLE","GOAT","DOG","PINATA","AVOCADO","GRAPES","DRINKING","WALKING","AMAZING","PIZZA","COCONUT","POTATOES"]
 sort(wordList)
 print(wordList)
+
+
+s = 0
+for i in wordList:
+    s+= len(i)
+
+print(s)
 
 mistakes=[]
 
@@ -169,13 +184,12 @@ for word in wordList:
 '''
 for lis in range(len(grid)):
     for j in range(len(grid[lis])):
-        if grid[lis][j] == '.':
+        if grid[lis][j] == ' ':
             grid[lis][j] = random.choice("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
         else:
             continue
 '''
 
-for i in grid:
-    print(i)
+print_puzzle(grid)
 
 print(f"Find the words : {wordList}")
