@@ -3,11 +3,12 @@ from numpy import random as npRandom
 
 class Puzzle():
     def __init__(self,rows,cols,wordList,invExist=False,emptySpaces=False,crazyChars=False,mixCasing=False,answersOnly=False) -> None:
-        self.grid = [[' ' for i in range(cols)] for i in range(rows)]
+        self.grid = [['.' for i in range(cols)] for i in range(rows)]
         self.rows = rows
         self.cols = cols
         self.wordList = wordList
         self.temp_mistakes = []
+        self.answers = {}
         self.remakeCount = 0
         self.invExist = invExist
         self.emptySpaces = emptySpaces
@@ -28,7 +29,7 @@ class Puzzle():
     def fill_empty(self):
         for lis in range(self.rows):
             for j in range(self.cols):
-                if self.grid[lis][j] == ' ':
+                if self.grid[lis][j] == '.':
 
                     if self.emptySpaces == True and self.crazyChars == True:
                         option = npRandom.choice((0,1),p=[0.5,0.5]) #choosing btw empty space or charecter : 0-empty , 1-charecter
@@ -59,16 +60,25 @@ class Puzzle():
 
     def generate_grid(self):
         for word in self.wordList:
-            self.word_place(word,self.rows,self.cols)
+            coordinates = self.word_place(word,self.rows,self.cols)
+            #to be added in word_place
+            if coordinates == None:
+                pass
+            else:
+                self.answers[word] = coordinates
         
         if self.temp_mistakes.copy() != []:
             for word in self.temp_mistakes:
-                if self.second_spot(word,self.rows,self.cols):
+                ans = self.second_spot(word,self.rows,self.cols)
+                if ans[0]:
+                    #insert things here !!!!!!!!!!
+                    #True,"v",i,wno-1
+                    self.answers[word] = (ans[1],ans[2],ans[3])
                     self.temp_mistakes.remove(word) 
 
         if len(self.temp_mistakes) !=0 :
             if self.remakeCount < 6: 
-                self.grid = [[' ' for i in range(self.cols)] for i in range(self.rows)]
+                self.grid = [['.' for i in range(self.cols)] for i in range(self.rows)]
                 self.temp_mistakes.clear()
                 self.remakeCount +=1
                 self.attempt_placing()
@@ -102,8 +112,20 @@ class Puzzle():
         info = self.find_spot(word,nno,wno)
         if info != None :
             wlIndex,nlIndex,orientation,inv = info
+            n,w = nlIndex,wlIndex
             if inv == 1:
                 word = word[::-1]
+                if orientation == "h":
+                    w += len(word)
+                elif orientation == "v":
+                    n += len(word)
+                elif orientation == "md":
+                    w += len(word)-1
+                    n += len(word)-1
+                elif orientation == "sd":
+                    n += len(word)-1
+                    w -= len(word)-1
+
             if orientation == "h":
                 self.place_horizontal(word,nlIndex,wlIndex)
             elif orientation == "v" : 
@@ -112,36 +134,40 @@ class Puzzle():
                 self.place_Mdiagonal(word,nlIndex,wlIndex)
             elif orientation == "sd":
                 self.place_Sdiagonal(word,nlIndex,wlIndex)
+            
+            return orientation,n,w
+        else:
+            return None
 
     def second_spot(self,word,nno,wno):
         lenght = len(word)
         for i in range(0,wno-lenght+1):
             if self.check_empty("h",word,0,i,0):
                 self.place_horizontal(word,0,i,0)
-                return True
+                return True,"h",0,i
             elif self.check_empty("h",word,0,i,1):
                 self.place_horizontal(word,0,i,1)
-                return True
+                return True,"h",0,i+len(word)
             elif self.check_empty("h",word,nno-1,i,0):
                 self.place_horizontal(word,nno-1,i,0)
-                return True
+                return True,"h",nno-1,i
             elif self.check_empty("h",word,nno-1,i,1):
                 self.place_horizontal(word,nno-1,i,1)
-                return True
+                return True,"h",nno-1,i+len(word)
         else:        
             for i in range(0,nno-lenght+1):
                 if self.check_empty("v",word,i,wno-1,0):
                     self.place_vertical(word,i,wno-1,0)
-                    return True
+                    return True,"v",i,wno-1
                 elif self.check_empty("v",word,i,wno-1,1):
                     self.place_vertical(word,i,wno-1,1)
-                    return True
+                    return True,"v",i+len(word),wno-1
                 elif self.check_empty("v",word,i,0,0):
                     self.place_vertical(word,i,0,0)
-                    return True
+                    return True,"v",i,0
                 elif self.check_empty("v",word,i,0,1):
                     self.place_vertical(word,i,0,1)
-                    return True
+                    return True,"v",i+len(word),0
 
     def check_empty(self,orient,word,nlIndex,wlIndex,inv=0):
         lenght = len(word)
@@ -149,25 +175,25 @@ class Puzzle():
             word = word[::-1]
         if orient=="h":
             for i in range(lenght):
-                if self.grid[nlIndex][wlIndex+i] not in [' ',word[i]] : 
+                if self.grid[nlIndex][wlIndex+i] not in ['.',word[i]] : 
                     return False
             else:
                 return True
         elif orient=="v":
             for i in range(lenght):
-                if self.grid[nlIndex+i][wlIndex] not in [' ',word[i]] : 
+                if self.grid[nlIndex+i][wlIndex] not in ['.',word[i]] : 
                     return False
             else:
                 return True
         elif orient=="md":
                 for i in range(lenght):
-                    if self.grid[nlIndex+i][wlIndex+i] not in [' ',word[i]] : 
+                    if self.grid[nlIndex+i][wlIndex+i] not in ['.',word[i]] : 
                         return False
                 else:
                     return True
         elif orient=="sd":
                 for i in range(lenght):
-                    if self.grid[nlIndex+i][wlIndex-i] not in [' ',word[i]] : 
+                    if self.grid[nlIndex+i][wlIndex-i] not in ['.',word[i]] : 
                         return False
                 else:
                     return True
@@ -272,5 +298,3 @@ class Puzzle():
             for i in line:
                 print(i,end='  ')
             print()
-        print("\nFind the words : ")
-        print(self.wordList)
